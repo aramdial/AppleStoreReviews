@@ -1,0 +1,1 @@
+export { router as feedRouter } from './feed';
