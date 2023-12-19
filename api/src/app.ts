@@ -7,6 +7,9 @@ import { errorHandler } from './middlewares/error';
 const app = express();
 const port = config.port || 8080;
 
+const cors = require('cors');
+app.use(cors({methods: ['GET'], origin: '*'}))
+
 // middleware
 app.use(addTimestamp);
 app.use(logger);

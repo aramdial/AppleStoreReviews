@@ -1,13 +1,13 @@
 import  { NextFunction, RequestHandler, Response, Request } from "express";
 import axios from 'axios';
 import {config } from '../../configs/index';
-import { IFeed } from "../../models/feed";
+import { IFeed } from "../../interfaces/feed";
 
 export const getFeed: RequestHandler = async (req: Request, res: Response, next: NextFunction) => {
     const appId = req.params.appId || '';
     const country = req.params.country || '';
-    const sortBy = req.params?.sortBy || '';
-    const page = req.params?.page;
+    const sortBy = req.query?.sortBy;
+    const page = req.query?.page;
     const params = `/${country}/rss/customerreviews/id=${appId}${sortBy ? `/sortBy=${sortBy}`: ''}${page ? `/page=${page}` : ''}/json`
 
     try {
