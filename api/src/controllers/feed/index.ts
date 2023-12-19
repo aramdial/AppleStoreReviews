@@ -1,7 +1,7 @@
 import  { NextFunction, RequestHandler, Response, Request } from "express";
 import axios from 'axios';
 import {config } from '../../configs/index';
-import { IFeed } from "../../models/review";
+import { IFeed } from "../../models/feed";
 
 export const getFeed: RequestHandler = async (req: Request, res: Response, next: NextFunction) => {
     const appId = req.params.appId || '';
