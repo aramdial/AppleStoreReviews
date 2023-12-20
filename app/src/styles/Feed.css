@@ -8,9 +8,11 @@
   justify-content: center;
   display: flex;
 }
-.pageCenter {
-  text-align: 'center';
+.page {
   padding-left: 10px;
   padding-right: 10px;
   margin: 0;
+}
+.center {
+  text-align: center;
 }

@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
-import { IEntry, IFeed, IFeedObject } from '../../interfaces/Feed';
+import { IFeed, IFeedObject } from '../../interfaces/Feed';
 import { AppDispatch } from '../configureStore';
 import { api } from '../../service/api';
 import { AxiosRequestConfig } from 'axios';
@@ -8,7 +8,7 @@ import { AxiosRequestConfig } from 'axios';
 const initialState = {
   feed: {} as IFeed,
   maxPage: 0,
-  entries: {} as Record<string, IEntry>,
+  // entries: {} as Record<string, IEntry>,
 };
 
 const entriesSlice = createSlice({
@@ -21,12 +21,12 @@ const entriesSlice = createSlice({
     updateMaxPage(state, { payload }: PayloadAction<{ max: number }>) {
       state.maxPage = payload.max;
     },
-    updateEntries(state, { payload }: PayloadAction<{ entries: IEntry[] }>) {
-      for (const entry of payload.entries || []) {
-        state.entries[entry.id.label] = entry;
-      }
-    },
-    resetEntries() {
+    // updateEntries(state, { payload }: PayloadAction<{ entries: IEntry[] }>) {
+    //   for (const entry of payload.entries || []) {
+    //     state.entries[entry.id.label] = entry;
+    //   }
+    // },
+    resetFeed() {
       return { ...initialState };
     },
   },
@@ -69,6 +69,6 @@ export const fetchMaxPage = (feed: IFeed) => {
   return 0;
 };
 
-export const { updateFeed, updateEntries, resetEntries, updateMaxPage } = entriesSlice.actions;
+export const { updateFeed, resetFeed, updateMaxPage } = entriesSlice.actions;
 
 export default entriesSlice.reducer;
