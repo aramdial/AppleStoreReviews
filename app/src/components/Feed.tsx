@@ -1,45 +1,39 @@
-import axios, { AxiosRequestConfig } from 'axios';
-import { IFeed, IFeedObject } from '../interfaces/Feed';
-import { useCallback, useEffect, useState } from 'react';
+import { useState } from 'react';
+import useLoadFeed from '../hooks/useLoadFeed';
+import { useSelector } from 'react-redux';
+import { RootState } from '../store/configureStore';
 import Entry from './Entry';
 import '../styles/Feed.css';
 
-interface IProps {
-  appId: string;
-  countryCode: string;
-  page: number;
-}
+const { REACT_APP_STORE_ID } = process.env;
 
-const { REACT_APP_API_URL } = process.env;
+const Feed = () => {
+  const [page, setPage] = useState(1);
+  const feed = useSelector((state: RootState) => state.feed.feed);
+  const maxPage = useSelector((state: RootState) => state.feed.maxPage);
 
-const Feed = (props: IProps) => {
-  const [feed, setFeed] = useState<IFeed | null>();
+  useLoadFeed({ appId: REACT_APP_STORE_ID ?? '', countryCode: 'us', page });
 
-  const fetchFeed = useCallback(async () => {
-    try {
-      const config: AxiosRequestConfig = {
-        baseURL: REACT_APP_API_URL || '',
-        params: {
-          sortBy: 'mostRecent',
-          page: props.page,
-        },
-      };
-      const res = await axios.get(`/feed/${props.appId}/${props.countryCode}`, config);
-      const { feed }: IFeedObject = res.data;
-      setFeed(feed);
-    } catch (err) {
-      console.log('err', err);
-    }
-  }, [props.appId, props.countryCode, props.page]);
-
-  useEffect(() => {
-    fetchFeed();
-  }, [fetchFeed, props.appId]);
-
+  if (!feed.entry.length || !feed.entry || !feed) {
+    return <div>No reviews available.</div>;
+  }
   return (
-    <div>
-      <h2 className="title">Instagram Reviews</h2>
-      {feed?.entry.map((item, index) => <Entry entry={item} key={index} />)}
+    <div className="feedContainer">
+      <h2 style={{ textAlign: 'center' }}>Instagram Reviews</h2>
+
+      {feed.entry.map((item, index) => (
+        <Entry key={index} entry={item} />
+      ))}
+
+      <div className="buttonRow">
+        <button disabled={page === 1} onClick={() => setPage((p) => p - 1)}>
+          {'<<'}
+        </button>
+        <p className="pageCenter">{page}</p>
+        <button disabled={page === maxPage} onClick={() => setPage((p) => p + 1)}>
+          {'>>'}
+        </button>
+      </div>
     </div>
   );
 };

@@ -1,3 +1,16 @@
+.feedContainer {
+  margin: 3%;
+}
 .title {
   text-align: center;
+}
+.buttonRow {
+  justify-content: center;
+  display: flex;
+}
+.pageCenter {
+  text-align: 'center';
+  padding-left: 10px;
+  padding-right: 10px;
+  margin: 0;
 }
