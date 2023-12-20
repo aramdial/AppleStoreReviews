@@ -3,4 +3,4 @@ import { getFeed } from '../../controllers/feed';
 
 export const router = Router();
 
-router.get('/:appId/:country', getFeed);
+router.get('/:appId/:country/entries', getFeed);
