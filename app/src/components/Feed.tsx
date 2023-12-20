@@ -7,10 +7,14 @@ import '../styles/Feed.css';
 import { IEntry } from '../interfaces/Feed';
 
 const { REACT_APP_STORE_ID } = process.env;
+const STANDARD_FEED_SIZE = 50;
 
 const Feed = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const feed = useSelector((state: RootState) => state.feed.feed);
+  const [removeFilter, setRemoveFilter] = useState(false);
+  const [filteredEntries, setFilteredEntries] = useState<IEntry[]>([]);
+  const maxPage = useSelector((state: RootState) => state.feed.maxPage);
   // const entries = useSelector((state: RootState) => state.feed.entries);
 
   useLoadFeed({ appId: REACT_APP_STORE_ID ?? '', countryCode: 'us', page: currentPage });
@@ -22,50 +26,63 @@ const Feed = () => {
     return endTime;
   }, []);
 
-  const [filtered, setFiltered] = useState<IEntry[]>([]);
   useEffect(() => {
     if (feed.entry) {
-      const res = feed.entry.filter((item, index) => {
+      const results = feed.entry.filter((item) => {
+        if (removeFilter) {
+          return item;
+        }
         const entryDate = new Date(item.updated.label);
         return entryDate > after48Hours;
       });
-      setFiltered(res);
+      setFilteredEntries(results);
     }
-  }, [after48Hours, currentPage, feed.entry]);
+  }, [after48Hours, currentPage, feed.entry, removeFilter]);
 
   const Reviews = () => {
-    if (!filtered.length) {
-      return <h4 className="center">End of Last 48 Hour Reviews</h4>;
-    }
-
     return (
       <div>
-        {filtered.map((item, index) => (
+        {filteredEntries.map((item, index) => (
           <Entry key={index} entry={item} />
         ))}
+        <div className="buttonRow">
+          <button disabled={currentPage === 1} onClick={() => setCurrentPage((p) => p - 1)}>
+            {'<<'}
+          </button>
+          <p className="page center">{currentPage}</p>
+          <button
+            disabled={filteredEntries.length < STANDARD_FEED_SIZE || currentPage === maxPage}
+            onClick={() => {
+              setCurrentPage((p) => {
+                return p + 1;
+              });
+            }}>
+            {'>>'}
+          </button>
+        </div>
       </div>
     );
   };
 
+  if (!feed) {
+    return <div>Reviews are not available.</div>;
+  }
+
   return (
     <div className="feedContainer">
-      <h2 className="center">Instagram Reviews</h2>
-      <Reviews />
-      <div className="buttonRow">
-        <button disabled={currentPage === 1} onClick={() => setCurrentPage((p) => p - 1)}>
-          {'<<'}
-        </button>
-        <p className="page center">{currentPage}</p>
-        <button
-          disabled={filtered.length < 23}
-          onClick={() => {
-            setCurrentPage((p) => {
-              return p + 1;
-            });
-          }}>
-          {'>>'}
+      <h2 className="center">App Store Reviews</h2>
+      <div className="filterBtnContainer">
+        <button onClick={() => setRemoveFilter(!removeFilter)}>
+          {removeFilter ? 'Add' : 'Remove'} Filter (Last 48 Hours)
         </button>
       </div>
+      {!filteredEntries.length ? (
+        <div className="center">
+          <h4>End of last 48 Hour Reviews</h4>
+        </div>
+      ) : (
+        <Reviews />
+      )}
     </div>
   );
 };
