@@ -1,3 +1,18 @@
+# Set Up
+
+Please download both `api` and `app` code base. 
+
+After downloading api project:
+1. Follow React guidelines below
+2. Make sure to have `.env` file created an env.example is given
+3. Start server locally `yarn dev` or `npm dev`
+
+After downloading app project:
+1. Follow React guidelines below
+2. Make sure to have `.env` file created an env.example is given
+   - An App Store ID must be given: You can use `389801252` for Instagram.
+3. Start app `yarn start` or `npm start`
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
@@ -13,11 +28,6 @@ Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
 The page will reload if you make edits.\
 You will also see any lint errors in the console.
-
-### `npm test`
-
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
 
 ### `npm run build`
 
